@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div id="board"></div>
+    <script>
+        let board = Array(9).fill(0);
+
+        function renderBoard() {
+            const boardDiv = document.getElementById("board");
+            boardDiv.innerHTML = "";
+            board.forEach((cell, i) => {
+                const cellDiv = document.createElement("div");
+                cellDiv.className = "cell";
+                cellDiv.textContent = cell === 1 ? "X" : cell === -1 ? "O" : "";
+                cellDiv.onclick = () => playerMove(i);
+                boardDiv.appendChild(cellDiv);
+            });
+        }
+
+        function playerMove(index) {
+            if (board[index] !== 0) return;
+            fetch("/move", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ board: board, player_move: index })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    board = data.board;
+                    renderBoard();
+                    if (data.status !== "continue") alert(data.status);
+                });
+        }
+
+        renderBoard();
+    </script>
+</body>
+</html>
