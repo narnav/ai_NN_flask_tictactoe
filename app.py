@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Initialize Neural Network
 nn = TicTacToeNN()
 try:
-    nn.load_model("data/model.npy")
+    nn.load_model("tic_tac_toe_model.npy")
 except FileNotFoundError:
     print("Model not found. Starting with random weights.")
 
